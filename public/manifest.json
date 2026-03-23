@@ -1,0 +1,22 @@
+{
+  "name": "ZIP 解压工具",
+  "short_name": "ZIP解压",
+  "description": "快速、安全的在线 ZIP 压缩包解压工具",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "zh-CN",
+  "scope": "/",
+  "prefer_related_applications": false
+}

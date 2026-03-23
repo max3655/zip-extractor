@@ -1,0 +1,11 @@
+﻿appId: com.zipextractor.app
+productName: ZIP解压工具
+directories:
+  output: release
+files:
+  - electron/**/*
+  - out/**/*
+  - package.json
+win:
+  target: dir
+  icon: public/icon.png
