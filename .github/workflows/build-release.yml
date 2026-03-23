@@ -30,13 +30,13 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        with:
+  
           node-version: '20'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+        run: npm install -g pnpm@9
+  
+  
 
       - name: Get version
         id: version
@@ -70,7 +70,7 @@ jobs:
       - name: Upload artifact (Windows)
         if: matrix.platform == 'win'
         uses: actions/upload-artifact@v4
-        with:
+  
           name: windows-build
           path: release/*.exe
           retention-days: 1
@@ -78,7 +78,7 @@ jobs:
       - name: Upload artifact (macOS)
         if: matrix.platform == 'mac'
         uses: actions/upload-artifact@v4
-        with:
+  
           name: macos-build
           path: release/*.dmg
           retention-days: 1
@@ -91,13 +91,13 @@ jobs:
     steps:
       - name: Download Windows build
         uses: actions/download-artifact@v4
-        with:
+  
           name: windows-build
           path: release/
 
       - name: Download macOS build
         uses: actions/download-artifact@v4
-        with:
+  
           name: macos-build
           path: release/
 
@@ -115,7 +115,7 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
-        with:
+  
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
           files: release/*
