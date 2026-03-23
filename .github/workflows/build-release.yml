@@ -1,5 +1,60 @@
-      - name: Build Electron (macOS)
-        if: matrix.platform == 'mac'
-        run: npx electron-builder --mac --${{ matrix.arch }} --publish never
+name: Build Release
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+          - os: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g pnpm@9
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm build:static
+      - if: runner.os == 'Windows'
+        run: npx electron-builder --win --x64
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - if: runner.os == 'macOS'
+        run: npx electron-builder --mac --universal
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: release/*.exe
+      - if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: release/*.dmg
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows
+          path: release/
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos
+          path: release/
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
